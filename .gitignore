@@ -1,0 +1,43 @@
+# Eclipse stuff
+/.classpath
+/.project
+/.settings
+/.checkstyle
+
+# netbeans
+/nbproject
+
+# No build file
+/build.xml
+
+# maven
+/target
+dependency-reduced-pom.xml
+
+# vim
+.*.sw[a-p]
+
+# various other potential build files
+/build
+/bin
+/dist
+/manifest.mf
+
+# Mac filesystem dust
+*.DS_Store
+
+# intellij
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# File to install on server
+install.sh
+
+# Testing files:
+debug.log
+
+# Doxygen
+/docs/html
+debug.txt
