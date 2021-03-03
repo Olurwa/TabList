@@ -13,6 +13,7 @@ import com.google.common.io.ByteStreams;
 
 import fr.doritanh.olurwa.tablist.listeners.BungeeMessageListener;
 import fr.doritanh.olurwa.tablist.listeners.CoreMessageListener;
+import fr.doritanh.olurwa.tablist.listeners.PlayerListener;
 import fr.doritanh.olurwa.tablist.manager.ScoreboardTab;
 import net.minecraft.server.v1_16_R3.IChatBaseComponent;
 import net.minecraft.server.v1_16_R3.IChatBaseComponent.ChatSerializer;
@@ -42,6 +43,8 @@ public class TabList extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+
 		// Register channels
 		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeMessageListener());
