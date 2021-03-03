@@ -1,0 +1,5 @@
+header: "§bHeader\\n "
+footer: " \\n§cFooter"
+
+server:
+  local: lobby

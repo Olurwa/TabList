@@ -26,8 +26,9 @@ public class TabList extends JavaPlugin {
 
 	private static TabList instance;
 
-	private final String header;
-	private final String footer;
+	private String header;
+	private String footer;
+	private String localServer;
 
 	private ScoreboardTab sTab;
 	private World world;
@@ -35,12 +36,20 @@ public class TabList extends JavaPlugin {
 	public TabList() {
 		instance = this;
 
-		this.header = "§bOlurwa\\n ";
-		this.footer = " \\n§cLobby";
+		this.header = "§bHeader\\n ";
+		this.footer = " \\n§cFooter";
+		this.localServer = "lobby";
 	}
 
 	@Override
 	public void onEnable() {
+		// Config file
+		this.saveDefaultConfig();
+		this.header = this.getConfig().getString("header");
+		this.footer = this.getConfig().getString("footer");
+		this.localServer = this.getConfig().getString("server.local");
+
+		// Register events
 		this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 
 		// Register channels
@@ -49,21 +58,37 @@ public class TabList extends JavaPlugin {
 		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "olurwa:core");
 		this.getServer().getMessenger().registerIncomingPluginChannel(this, "olurwa:core", new CoreMessageListener());
 
+		// Save world
 		for (World w : this.getServer().getWorlds()) {
 			if (w.getEnvironment() == Environment.NORMAL) {
 				this.world = w;
 			}
 		}
 
+		// Register scoreboard
 		this.sTab = new ScoreboardTab();
 	}
 
+	/**
+	 * Get a TabList instance.
+	 * 
+	 * @return instance of TabList
+	 */
 	public static TabList get() {
 		return instance;
 	}
 
+	/**
+	 * Get the first normal world
+	 * 
+	 * @return A world
+	 */
 	public World getWorld() {
 		return this.world;
+	}
+
+	public String getServerName() {
+		return this.localServer;
 	}
 
 	/**
@@ -93,6 +118,11 @@ public class TabList extends JavaPlugin {
 		if (player == null)
 			return;
 
+		// Lobby
+		ByteArrayDataOutput lobby = ByteStreams.newDataOutput();
+		lobby.writeUTF("PlayerList");
+		lobby.writeUTF("lobby");
+		player.sendPluginMessage(this, "BungeeCord", lobby.toByteArray());
 		// Creative
 		ByteArrayDataOutput creative = ByteStreams.newDataOutput();
 		creative.writeUTF("PlayerList");
@@ -106,10 +136,10 @@ public class TabList extends JavaPlugin {
 	}
 
 	/**
-	 * Update the lobby player list
+	 * Update the local player list
 	 */
-	public void updateLobby() {
-		this.sTab.updateLobby();
+	public void updateLocal() {
+		this.sTab.updateLocal();
 	}
 
 	/**
@@ -117,8 +147,10 @@ public class TabList extends JavaPlugin {
 	 * 
 	 * @param playersNames - List of player names
 	 */
-	public void updateCreative(String[] playersNames) {
-		this.sTab.updateCreative(playersNames);
+	public void updateExternal(String serverName, String[] playersNames) {
+		if (serverName.equalsIgnoreCase(this.localServer))
+			return;
+		this.sTab.updateExternal(serverName, playersNames);
 	}
 
 	/**

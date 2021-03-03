@@ -1,27 +1,29 @@
 package fr.doritanh.olurwa.tablist.manager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 
+import fr.doritanh.olurwa.tablist.TabList;
 import net.minecraft.server.v1_16_R3.EntityPlayer;
 
 public class ScoreboardTab {
 
+	private final String localServer;
 	private final Scoreboard sb;
-	private final TeamTab lobby;
-	private final TeamTab creative;
-	private final TeamTab survival;
-	private final TeamTab others;
+	private final HashMap<String, TeamTab> teams;
 
 	public ScoreboardTab() {
+		this.localServer = TabList.get().getServerName();
 		this.sb = Bukkit.getScoreboardManager().getNewScoreboard();
-		this.lobby = new TeamTab(sb, 0, "§lLobby");
-		this.creative = new TeamTab(sb, 1, "§lCréatif");
-		this.survival = new TeamTab(sb, 2, "§lSurvie");
-		this.others = new TeamTab(sb, 3, "§lAutre");
+		this.teams = new HashMap<String, TeamTab>();
+		this.teams.put("lobby", new TeamTab(sb, 0, "§lLobby"));
+		this.teams.put("creative", new TeamTab(sb, 1, "§lCréatif"));
+		this.teams.put("survival", new TeamTab(sb, 2, "§lSurvie"));
+		this.teams.put("others", new TeamTab(sb, 3, "§lAutre"));
 	}
 
 	public Scoreboard getScoreboard() {
@@ -30,10 +32,9 @@ public class ScoreboardTab {
 
 	public ArrayList<EntityPlayerTab> getPlayers() {
 		ArrayList<EntityPlayerTab> ept = new ArrayList<EntityPlayerTab>();
-		ept.addAll(this.lobby.getPlayers());
-		ept.addAll(this.creative.getPlayers());
-		ept.addAll(this.survival.getPlayers());
-		ept.addAll(this.others.getPlayers());
+		this.teams.forEach((name, team) -> {
+			ept.addAll(team.getPlayers());
+		});
 		return ept;
 	}
 
@@ -48,10 +49,9 @@ public class ScoreboardTab {
 
 	public ArrayList<EntityPlayerTab> getRemoved() {
 		ArrayList<EntityPlayerTab> removed = new ArrayList<EntityPlayerTab>();
-		removed.addAll(this.lobby.getRemoved());
-		removed.addAll(this.creative.getRemoved());
-		removed.addAll(this.survival.getRemoved());
-		removed.addAll(this.others.getRemoved());
+		this.teams.forEach((name, team) -> {
+			removed.addAll(team.getRemoved());
+		});
 		return removed;
 	}
 
@@ -64,21 +64,23 @@ public class ScoreboardTab {
 		return removedPlayers;
 	}
 
-	public void updateLobby() {
-		this.lobby.clear();
+	public void updateLocal() {
+		this.teams.get(this.localServer).clear();
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
-			this.lobby.add(new EntityPlayerTab(p));
+			this.teams.get(this.localServer).add(new EntityPlayerTab(p));
 		}
 	}
 
-	public void updateCreative(String[] playersNames) {
-		this.creative.clear();
+	public void updateExternal(String serverName, String[] playersNames) {
+		if (!this.teams.containsKey(serverName))
+			return;
+		this.teams.get(serverName).clear();
 
 		for (String name : playersNames) {
 			if (name.equalsIgnoreCase(""))
 				continue;
-			this.creative.add(new EntityPlayerTab(name, name));
+			this.teams.get(serverName).add(new EntityPlayerTab(name, name));
 		}
 	}
 

@@ -19,12 +19,10 @@ public class CoreMessageListener implements PluginMessageListener {
 		ByteArrayDataInput in = ByteStreams.newDataInput(message);
 		String subchannel = in.readUTF();
 		if (subchannel.equals("PlayerList")) {
-			String server = in.readUTF();
+			String serverName = in.readUTF();
 			String players = in.readUTF();
 			String[] playerList = players.split(", ");
-			if (server.equalsIgnoreCase("creative")) {
-				TabList.get().updateCreative(playerList);
-			}
+			TabList.get().updateExternal(serverName, playerList);
 			for (Player p : Bukkit.getOnlinePlayers()) {
 				TabList.get().send(p);
 			}

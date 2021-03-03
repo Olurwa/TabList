@@ -19,11 +19,9 @@ public class BungeeMessageListener implements PluginMessageListener {
 		ByteArrayDataInput in = ByteStreams.newDataInput(message);
 		String subchannel = in.readUTF();
 		if (subchannel.equals("PlayerList")) {
-			String server = in.readUTF();
+			String serverName = in.readUTF();
 			String[] playerList = in.readUTF().split(", ");
-			if (server.equalsIgnoreCase("creative")) {
-				TabList.get().updateCreative(playerList);
-			}
+			TabList.get().updateExternal(serverName, playerList);
 			for (Player p : Bukkit.getOnlinePlayers()) {
 				TabList.get().send(p);
 			}

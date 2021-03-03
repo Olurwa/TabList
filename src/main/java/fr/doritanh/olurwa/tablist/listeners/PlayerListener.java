@@ -15,7 +15,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerLogin(PlayerJoinEvent e) {
 		TabList.get().sendHeaderFooter(e.getPlayer());
-		TabList.get().updateLobby();
+		TabList.get().updateLocal();
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			TabList.get().send(p);
@@ -35,7 +35,7 @@ public class PlayerListener implements Listener {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				TabList.get().updateLobby();
+				TabList.get().updateLocal();
 
 			}
 		}.runTaskLater(TabList.get(), 20);
