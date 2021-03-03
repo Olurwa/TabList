@@ -1,4 +1,4 @@
-name: Lobby
+name: TabList
 version: 1.0
 main: fr.doritanh.olurwa.tablist.TabList
 api-version: 1.16

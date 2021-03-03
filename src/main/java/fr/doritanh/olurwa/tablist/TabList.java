@@ -28,8 +28,8 @@ public class TabList extends JavaPlugin {
 
 	private final String header;
 	private final String footer;
-	private final ScoreboardTab sTab;
 
+	private ScoreboardTab sTab;
 	private World world;
 
 	public TabList() {
@@ -37,8 +37,6 @@ public class TabList extends JavaPlugin {
 
 		this.header = "§bOlurwa\\n ";
 		this.footer = " \\n§cLobby";
-
-		this.sTab = new ScoreboardTab();
 	}
 
 	@Override
@@ -56,6 +54,8 @@ public class TabList extends JavaPlugin {
 				this.world = w;
 			}
 		}
+
+		this.sTab = new ScoreboardTab();
 	}
 
 	public static TabList get() {
