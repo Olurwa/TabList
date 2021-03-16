@@ -95,11 +95,12 @@ public class ScoreboardTab {
 			OfflinePlayer player = Bukkit.getOfflinePlayer(name);
 
 			User user = TabList.get().getLuckPerms().getUserManager().getUser(player.getUniqueId());
+			String listname = name;
 			if (user != null) {
-				name = ChatColor.translateAlternateColorCodes('&', user.getCachedData().getMetaData().getPrefix())
+				listname = ChatColor.translateAlternateColorCodes('&', user.getCachedData().getMetaData().getPrefix())
 						+ name;
 			}
-			this.teams.get(serverName).add(new EntityPlayerTab(name, name));
+			this.teams.get(serverName).add(new EntityPlayerTab(name, listname));
 		}
 	}
 
