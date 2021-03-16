@@ -73,10 +73,10 @@ public class ScoreboardTab {
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			User user = TabList.get().getLuckPerms().getPlayerAdapter(Player.class).getUser(p);
-			String name = user.getCachedData().getMetaData().getPrefix();
-			if (name != null) {
-				name += ChatColor.WHITE + p.getName();
-				name = ChatColor.translateAlternateColorCodes('&', name);
+			String prefix = user.getCachedData().getMetaData().getPrefix();
+			String name = ChatColor.WHITE + p.getName();
+			if (prefix != null) {
+				name = ChatColor.translateAlternateColorCodes('&', prefix) + name;
 			}
 			p.playerListName(Component.text(name));
 			this.teams.get(this.localServer).add(new EntityPlayerTab(p));
