@@ -9,6 +9,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import fr.doritanh.olurwa.tablist.TabList;
 import net.luckperms.api.model.user.User;
+import net.md_5.bungee.api.ChatColor;
 import net.minecraft.server.v1_16_R3.EntityPlayer;
 
 public class ScoreboardTab {
@@ -71,7 +72,9 @@ public class ScoreboardTab {
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			User user = TabList.get().getLuckPerms().getPlayerAdapter(Player.class).getUser(p);
-			p.setPlayerListName(user.getCachedData().getMetaData().getPrefix() + p.getName());
+			String name = user.getCachedData().getMetaData().getPrefix() + p.getName();
+			name = ChatColor.translateAlternateColorCodes('&', name);
+			p.setPlayerListName(name);
 			this.teams.get(this.localServer).add(new EntityPlayerTab(p));
 		}
 	}
