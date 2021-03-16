@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 
 import fr.doritanh.olurwa.tablist.TabList;
+import net.kyori.adventure.text.Component;
+import net.luckperms.api.model.user.User;
 import net.minecraft.server.v1_16_R3.EntityPlayer;
 
 public class ScoreboardTab {
@@ -68,6 +70,9 @@ public class ScoreboardTab {
 		this.teams.get(this.localServer).clear();
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
+			User user = TabList.get().getLuckPerms().getPlayerAdapter(Player.class).getUser(p);
+			p.playerListName(
+					Component.text(user.getCachedData().getMetaData().getPrefix()).append(Component.text(p.getName())));
 			this.teams.get(this.localServer).add(new EntityPlayerTab(p));
 		}
 	}

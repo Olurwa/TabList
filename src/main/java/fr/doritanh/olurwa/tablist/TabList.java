@@ -15,6 +15,8 @@ import fr.doritanh.olurwa.tablist.listeners.BungeeMessageListener;
 import fr.doritanh.olurwa.tablist.listeners.CoreMessageListener;
 import fr.doritanh.olurwa.tablist.listeners.PlayerListener;
 import fr.doritanh.olurwa.tablist.manager.ScoreboardTab;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
 import net.minecraft.server.v1_16_R3.IChatBaseComponent;
 import net.minecraft.server.v1_16_R3.IChatBaseComponent.ChatSerializer;
 import net.minecraft.server.v1_16_R3.PacketPlayOutPlayerInfo;
@@ -33,12 +35,16 @@ public class TabList extends JavaPlugin {
 	private ScoreboardTab sTab;
 	private World world;
 
+	private LuckPerms lp;
+
 	public TabList() {
 		instance = this;
 
 		this.header = "§bHeader\\n ";
 		this.footer = " \\n§cFooter";
 		this.localServer = "lobby";
+
+		this.lp = LuckPermsProvider.get();
 	}
 
 	@Override
@@ -89,6 +95,10 @@ public class TabList extends JavaPlugin {
 
 	public String getServerName() {
 		return this.localServer;
+	}
+
+	public LuckPerms getLuckPerms() {
+		return lp;
 	}
 
 	/**
