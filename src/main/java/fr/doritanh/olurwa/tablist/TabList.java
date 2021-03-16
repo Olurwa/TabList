@@ -43,12 +43,13 @@ public class TabList extends JavaPlugin {
 		this.header = "§bHeader\\n ";
 		this.footer = " \\n§cFooter";
 		this.localServer = "lobby";
-
-		this.lp = LuckPermsProvider.get();
 	}
 
 	@Override
 	public void onEnable() {
+		// Register luckperms
+		this.lp = LuckPermsProvider.get();
+
 		// Config file
 		this.saveDefaultConfig();
 		this.header = this.getConfig().getString("header");
