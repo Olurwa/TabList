@@ -2,14 +2,17 @@ package fr.doritanh.olurwa.tablist.manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 
 import fr.doritanh.olurwa.tablist.TabList;
 import net.kyori.adventure.text.Component;
 import net.luckperms.api.model.user.User;
+import net.luckperms.api.model.user.UserManager;
 import net.md_5.bungee.api.ChatColor;
 import net.minecraft.server.v1_16_R3.EntityPlayer;
 
@@ -67,7 +70,6 @@ public class ScoreboardTab {
 		return removedPlayers;
 	}
 
-	@SuppressWarnings("deprecation") // Can't manage to translate &c to Component
 	public void updateLocal() {
 		this.teams.get(this.localServer).clear();
 
@@ -80,6 +82,7 @@ public class ScoreboardTab {
 		}
 	}
 
+	@SuppressWarnings("deprecation") // We can only have names with bungee.
 	public void updateExternal(String serverName, String[] playersNames) {
 		if (!this.teams.containsKey(serverName))
 			return;
@@ -88,7 +91,16 @@ public class ScoreboardTab {
 		for (String name : playersNames) {
 			if (name.equalsIgnoreCase(""))
 				continue;
-			this.teams.get(serverName).add(new EntityPlayerTab(name, name));
+			OfflinePlayer player = Bukkit.getOfflinePlayer(name);
+
+			UserManager userManager = TabList.get().getLuckPerms().getUserManager();
+			CompletableFuture<User> userFuture = userManager.loadUser(player.getUniqueId());
+
+			userFuture.thenAcceptAsync(user -> {
+				String tablistName = ChatColor.translateAlternateColorCodes('&',
+						user.getCachedData().getMetaData().getPrefix());
+				this.teams.get(serverName).add(new EntityPlayerTab(tablistName + name, name));
+			});
 		}
 	}
 
