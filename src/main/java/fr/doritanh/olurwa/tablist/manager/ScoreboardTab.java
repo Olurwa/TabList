@@ -2,7 +2,6 @@ package fr.doritanh.olurwa.tablist.manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -12,7 +11,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import fr.doritanh.olurwa.tablist.TabList;
 import net.kyori.adventure.text.Component;
 import net.luckperms.api.model.user.User;
-import net.luckperms.api.model.user.UserManager;
 import net.md_5.bungee.api.ChatColor;
 import net.minecraft.server.v1_16_R3.EntityPlayer;
 
@@ -75,8 +73,11 @@ public class ScoreboardTab {
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			User user = TabList.get().getLuckPerms().getPlayerAdapter(Player.class).getUser(p);
-			String name = user.getCachedData().getMetaData().getPrefix() + ChatColor.WHITE + p.getName();
-			name = ChatColor.translateAlternateColorCodes('&', name);
+			String name = user.getCachedData().getMetaData().getPrefix();
+			if (name != null) {
+				name += ChatColor.WHITE + p.getName();
+				name = ChatColor.translateAlternateColorCodes('&', name);
+			}
 			p.playerListName(Component.text(name));
 			this.teams.get(this.localServer).add(new EntityPlayerTab(p));
 		}
@@ -93,14 +94,12 @@ public class ScoreboardTab {
 				continue;
 			OfflinePlayer player = Bukkit.getOfflinePlayer(name);
 
-			UserManager userManager = TabList.get().getLuckPerms().getUserManager();
-			CompletableFuture<User> userFuture = userManager.loadUser(player.getUniqueId());
-
-			userFuture.thenAcceptAsync(user -> {
-				String tablistName = ChatColor.translateAlternateColorCodes('&',
-						user.getCachedData().getMetaData().getPrefix());
-				this.teams.get(serverName).add(new EntityPlayerTab(tablistName + name, name));
-			});
+			User user = TabList.get().getLuckPerms().getPlayerAdapter(Player.class).getUser(player.getPlayer());
+			if (user != null) {
+				name = ChatColor.translateAlternateColorCodes('&', user.getCachedData().getMetaData().getPrefix())
+						+ name;
+			}
+			this.teams.get(serverName).add(new EntityPlayerTab(name, name));
 		}
 	}
 
