@@ -97,8 +97,11 @@ public class ScoreboardTab {
 			User user = TabList.get().getLuckPerms().getUserManager().getUser(player.getUniqueId());
 			String listname = name;
 			if (user != null) {
-				listname = ChatColor.translateAlternateColorCodes('&', user.getCachedData().getMetaData().getPrefix())
-						+ name;
+				String prefix = user.getCachedData().getMetaData().getPrefix();
+				if (prefix != null) {
+					listname = ChatColor.translateAlternateColorCodes('&',
+							user.getCachedData().getMetaData().getPrefix()) + name;
+				}
 			}
 			this.teams.get(serverName).add(new EntityPlayerTab(name, listname));
 		}
