@@ -100,7 +100,7 @@ public class ScoreboardTab {
 				String prefix = user.getCachedData().getMetaData().getPrefix();
 				if (prefix != null) {
 					listname = ChatColor.translateAlternateColorCodes('&',
-							user.getCachedData().getMetaData().getPrefix()) + name;
+							user.getCachedData().getMetaData().getPrefix()) + ChatColor.WHITE + name;
 				}
 			}
 			this.teams.get(serverName).add(new EntityPlayerTab(name, listname));
