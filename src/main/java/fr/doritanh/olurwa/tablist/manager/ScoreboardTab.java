@@ -94,7 +94,7 @@ public class ScoreboardTab {
 				continue;
 			OfflinePlayer player = Bukkit.getOfflinePlayer(name);
 
-			User user = TabList.get().getLuckPerms().getPlayerAdapter(Player.class).getUser(player.getPlayer());
+			User user = TabList.get().getLuckPerms().getUserManager().getUser(player.getUniqueId());
 			if (user != null) {
 				name = ChatColor.translateAlternateColorCodes('&', user.getCachedData().getMetaData().getPrefix())
 						+ name;
